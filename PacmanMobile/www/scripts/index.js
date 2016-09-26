@@ -132,6 +132,7 @@
                     //if (!KEYDOWN) {
                     KEYDOWN = true;
                     if (PACMAN_DEAD && !LOCK) {
+                        stopWatch();
                         erasePacman();
                         resetPacman();
                         drawPacman();
@@ -142,6 +143,7 @@
                         moveGhosts();
 
                         blinkSuperBubbles();
+                        startWatch();
 
                     } else if (!PAUSE && !PACMAN_DEAD && !LOCK) {
                         startWatch();
@@ -154,12 +156,15 @@
                         }*/
                     } else if (e.keyCode === 80 && !PACMAN_DEAD && !LOCK) {
                         if (PAUSE) {
+                            startWatch();
                             resumeGame();
                         } else {
+                            stopWatch();
                             pauseGame();
                         }
                     } else if (GAMEOVER) {
-                        initGame();
+                        stopWatch();
+                        initHome();
                     }
                     //}
                 }
@@ -167,26 +172,28 @@
         
     }
 
-    function onSuccess() {
+    function onSuccess(acceleration) {
         var SOUTH = 2, NORTH = 4, EAST = 3, WEST = 1;
-        if (accelorometer.x>2) {
+        if (acceleration.x > 2.0) {
             movePacman(WEST);
-        } else if (accelorometer.y > 2) {
+        } else if (acceleration.y > 2.0) {
             movePacman(SOUTH);
-        } else if (accelorometer.x > -2) {
+        } else if (acceleration.x > -2.0) {
             movePacman(EAST);
-        } else if (accelorometer.y > -2) {
+        } else if (acceleration.y > -2.0) {
             movePacman(NORTH);
         }
     }
 
     function onPause() {
         // TODO: This application has been suspended. Save application state here.
+        stopWatch();
         pauseGame();
     };
 
     function onResume() {
         // TODO: This application has been reactivated. Restore application state here.
+        startWatch();
         resumeGame();
     };
 } )();
